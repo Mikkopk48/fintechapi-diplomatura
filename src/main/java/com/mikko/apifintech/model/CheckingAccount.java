@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 
 public class CheckingAccount extends Account {
 
-    @Column(name = "overdraft_limit", nullable = false)
+    @Column(name = "overdraft_limit")
     private BigDecimal overdraftLimit = BigDecimal.valueOf(500);
 
     @Override
