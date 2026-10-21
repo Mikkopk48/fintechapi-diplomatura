@@ -1,9 +1,12 @@
 package com.mikko.apifintech.service;
 
 import com.mikko.apifintech.exception.AccountNotFoundException;
+import com.mikko.apifintech.exception.DuplicateAccountNumberException;
+import com.mikko.apifintech.exception.DuplicateEmailException;
 import com.mikko.apifintech.model.Account;
 import com.mikko.apifintech.model.User;
 import com.mikko.apifintech.repository.AccountRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -49,7 +52,18 @@ public class AccountService {
     }
     public Account update(Long id, String accountNumber) {
         Account account = findById(id);
+
+        if (!account.getAccountNumber().equals(accountNumber)
+        && accountRepository.existsByAccountNumber(accountNumber)) {
+            throw new DuplicateAccountNumberException(accountNumber);
+        }
+
         account.setAccountNumber(accountNumber);
-        return accountRepository.save(account);
+        try {
+            return accountRepository.save(account);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateAccountNumberException(accountNumber);
+        }
     }
+
 }
