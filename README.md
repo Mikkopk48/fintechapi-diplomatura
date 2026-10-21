@@ -48,6 +48,8 @@ docker-compose up -d
 ./mvnw spring-boot:run
 ```
 
+`!` Correr en la terminal local del sistema.
+
 La API queda en `http://localhost:8080`. Las tablas se crean solas (`ddl-auto=update`).
 
 ## Documentación
@@ -96,7 +98,7 @@ Las excepciones personalizadas se traducen a respuestas HTTP en `GlobalException
 ```bash
 ./mvnw test
 ```
-`!` Correr en la terminal local del sistema
+
 Son 20 tests: tests unitarios de `AccountService` y `UserService` con Mockito, tests de dominio puro del polimorfismo y
 un test de carga del contexto de Spring.
 
