@@ -96,7 +96,7 @@ Las excepciones personalizadas se traducen a respuestas HTTP en `GlobalException
 ```bash
 ./mvnw test
 ```
-
+`!` Correr en la terminal local del sistema
 Son 20 tests: tests unitarios de `AccountService` y `UserService` con Mockito, tests de dominio puro del polimorfismo y
 un test de carga del contexto de Spring.
 
