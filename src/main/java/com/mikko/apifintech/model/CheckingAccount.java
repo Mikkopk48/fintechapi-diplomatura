@@ -16,8 +16,12 @@ import java.math.BigDecimal;
 
 public class CheckingAccount extends Account {
 
+
+    // Limite de descubrimiento(cuanto dinero podes gastar sobre tu saldo)
     @Column(name = "overdraft_limit")
     private BigDecimal overdraftLimit = BigDecimal.valueOf(500);
+
+
 
     @Override
     public void withdraw(BigDecimal amount) {

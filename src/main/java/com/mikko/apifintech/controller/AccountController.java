@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cuentas")
+//mapeo de pedido
 public class AccountController {
 private final AccountService accountService;
 
@@ -30,14 +31,20 @@ private final AccountService accountService;
                 .toList();
     }
     @GetMapping("/{id}")
+    //tomar mapeo de {id}
     public AccountResponse findById(@PathVariable Long id){
         return Mapper.toResponse(accountService.findById(id));
     }
+
     @PostMapping
+
+    //@Valid dispara las validaciones que estan en el dto
+    //@RequestBody le envia al metodo lo que esta en el json del request
     public ResponseEntity<AccountResponse> create(@Valid @RequestBody CreateAccountRequest request){
         Account created = accountService.create(Mapper.toEntity(request), request.userId());
         return ResponseEntity.status(HttpStatus.CREATED).body(Mapper.toResponse(created));
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         accountService.delete(id);
@@ -49,10 +56,12 @@ private final AccountService accountService;
         return Mapper.toResponse(accountService.deposit(id, request.amount()));
     }
 
+
     @PostMapping("/{id}/retiros")
     public AccountResponse withdraw(@PathVariable Long id, @Valid @RequestBody AmountRequest request) {
         return Mapper.toResponse(accountService.withdraw(id, request.amount()));
     }
+
     @PutMapping("/{id}")
     public AccountResponse update(@PathVariable Long id, @Valid @RequestBody UpdateAccountRequest request) {
         return Mapper.toResponse(accountService.update(id, request.accountNumber()));

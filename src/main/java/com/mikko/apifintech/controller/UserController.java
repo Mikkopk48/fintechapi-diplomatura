@@ -37,6 +37,7 @@ public class UserController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @ApiResponse(responseCode = "409", description = "Ya existe un usuario con ese email",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
     public UserResponse create(@Valid @RequestBody CreateUserRequest request) {
         User created = userService.create(Mapper.toEntity(request));
         return Mapper.toResponse(created);

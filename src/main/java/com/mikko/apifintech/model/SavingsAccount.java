@@ -16,8 +16,9 @@ public class SavingsAccount extends Account{
             throw  new IllegalArgumentException("El monto a retirar debe ser positivo");
         }
         if (amount.compareTo(getBalance())> 0){
-            throw  new InsufficientFundsException("Saldo insufuciente");
+            throw  new InsufficientFundsException("Saldo insuficiente");
         }
+        setBalance(getBalance().subtract(amount));
     }
     @Override
     public AccountType getType() {

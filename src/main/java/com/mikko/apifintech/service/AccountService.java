@@ -14,16 +14,25 @@ import java.util.List;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    //atributo: casillero vacio con nombre y tipo esperando a que le pongan algo
+
     private final UserService userService;
 
-    public AccountService(AccountRepository accountRepository, UserService userService) {
-        this.accountRepository = accountRepository;
+    public AccountService(
+            AccountRepository accountRepository,
+            //Parametro del repository, es lo que llega de afuera un repository ya creado que spring le entrega
+
+            UserService userService) {
+                this.accountRepository //Es el casilledo de la clase(es como llamar a la clase que esta mas arriba)
+                =//dice guarda lo que me entregaron
+                accountRepository;//Es lo que llego por el parametro
+
         this.userService = userService;
     }
     public Account create(Account account, Long userId){
-        User owner = userService.findById(userId);
-        account.setOwner(owner);
-        return  accountRepository.save(account);
+        User owner = userService.findById(userId);//le pide a user service que busque al usario con findById
+        account.setOwner(owner);//le asigna el userId account.setOwner(owner);duño a la cuenta
+        return  accountRepository.save(account);//inserta la cuenta y la devuelve
     }
     public Account findById(Long id) {
         return accountRepository.findById(id)
@@ -35,9 +44,9 @@ public class AccountService {
     }
 
     public Account deposit(Long accountId, BigDecimal amount) {
-        Account account = findById(accountId);
-        account.deposit(amount);
-        return accountRepository.save(account);
+        Account account = findById(accountId);//busca la cuenta a la que hacer el deposito
+        account.deposit(amount);//hace el deposito
+        return accountRepository.save(account);//retorna la instanciacion de repository guardada
     }
 
     public Account withdraw(Long accountId, BigDecimal amount) {
@@ -65,5 +74,4 @@ public class AccountService {
             throw new DuplicateAccountNumberException(accountNumber);
         }
     }
-
-}
+    }

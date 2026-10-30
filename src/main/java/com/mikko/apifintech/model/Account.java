@@ -24,7 +24,7 @@ public abstract class Account implements Operable {
     @Column(nullable = false, unique = true)
     private String accountNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false,precision = 19,scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;
 
     @Column(nullable = false, updatable = false)

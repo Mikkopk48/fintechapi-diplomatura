@@ -22,9 +22,18 @@ class AccountPolymorphismTest {
 
         BigDecimal amount = new BigDecimal("300");
 
+
         assertThrows(InsufficientFundsException.class, () -> savings.withdraw(amount));
         checking.withdraw(amount);
         assertEquals(0, new BigDecimal("-200").compareTo(checking.getBalance()));
+    }
+
+    @Test
+    void withdraw_subtractsAmountOfAccount() {
+        Account account = new SavingsAccount();
+        account.deposit(new BigDecimal("1000"));
+        account.withdraw(new BigDecimal("500"));
+        assertEquals(0, new BigDecimal("500").compareTo(account.getBalance()));
     }
 
     @Test

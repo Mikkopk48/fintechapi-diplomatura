@@ -12,37 +12,42 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+//La marca como un consejero global
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    //Va a cada metodo
 
     @ExceptionHandler({UserNotFoundException.class, AccountNotFoundException.class})
+    //Recivo estos errores UserNotFoundException AccountNotFoundException
     public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException ex, HttpServletRequest request) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
-
-    @ExceptionHandler({DuplicateEmailException.class, DuplicateAccountNumberException.class})
-    public ResponseEntity<ErrorResponse> handleDuplicate(RuntimeException ex, HttpServletRequest request) {
-        return build(HttpStatus.CONFLICT, ex.getMessage(), request);
-    }
-
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<ErrorResponse> handleInsufficientFunds(InsufficientFundsException ex, HttpServletRequest request) {
         return build(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), request);
     }
 
+    @ExceptionHandler({DuplicateEmailException.class, DuplicateAccountNumberException.class})
+    public ResponseEntity<ErrorResponse> handleDuplicate(RuntimeException ex, HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT,//409
+                ex.getMessage(), request);
+    }
+
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
-
+    //Este metodo atiende este tipo de excepcion
+    //Le dice a spring que le entregue esta excepcion
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    //La lanza spring antes de que llegue al controller
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining("; "));
         return build(HttpStatus.BAD_REQUEST, message, request);
     }
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleUnreadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, "JSON inválido o valor no permitido", request);
@@ -50,12 +55,13 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String message, HttpServletRequest request) {
         ErrorResponse body = new ErrorResponse(
-                LocalDateTime.now(),
-                status.value(),
-                status.getReasonPhrase(),
-                message,
-                request.getRequestURI()
+                LocalDateTime.now(),//fecha y hora
+                status.value(),//num de codigo 404
+                status.getReasonPhrase(),//texto de codigo 404 = notFound
+                message,//mensaje de la excepcion texto escrito en la excepcion
+                request.getRequestURI()// el numero al que llamo el cliente URL clients/
         );
         return ResponseEntity.status(status).body(body);
+        //arma una respuesta http y le pega el objeto que se creo arrriba
     }
 }
