@@ -35,7 +35,21 @@ class AccountPolymorphismTest {
         account.withdraw(new BigDecimal("500"));
         assertEquals(0, new BigDecimal("500").compareTo(account.getBalance()));
     }
+    @Test
+    void withdraw_leavesZeroBalance() {
+        Account account = new SavingsAccount();
+        account.deposit(new BigDecimal("1000"));
+        account.withdraw(new BigDecimal("1000"));
+        assertEquals(0, new BigDecimal("0").compareTo(account.getBalance()));
+    }
+    @Test
+    void withdraw_rejectsAmountGreaterThanBalance() {
+        Account account = new SavingsAccount();
+        account.deposit(new BigDecimal("1000"));
 
+        assertThrows(InsufficientFundsException.class,
+                () -> account.withdraw(new BigDecimal("1000.01")));
+    }
     @Test
     void deposit_rejectsZeroAndNegativeAmounts() {
         Account account = new SavingsAccount();
